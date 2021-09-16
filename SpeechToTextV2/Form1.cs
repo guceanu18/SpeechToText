@@ -149,6 +149,7 @@ namespace SpeechToTextV2
             var item = obj["partial"].ToString();
             System.Diagnostics.Debug.WriteLine(item);
             finalResult += item + "\n";
+
         }
 
         public async Task DisconnectFromServer()

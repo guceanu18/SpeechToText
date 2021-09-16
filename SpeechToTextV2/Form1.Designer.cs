@@ -32,6 +32,7 @@ namespace SpeechToTextV2
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.transmitBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -61,11 +62,22 @@ namespace SpeechToTextV2
             this.textBox1.Size = new System.Drawing.Size(100, 23);
             this.textBox1.TabIndex = 2;
             // 
+            // transmitBtn
+            // 
+            this.transmitBtn.Location = new System.Drawing.Point(425, 339);
+            this.transmitBtn.Name = "transmitBtn";
+            this.transmitBtn.Size = new System.Drawing.Size(75, 23);
+            this.transmitBtn.TabIndex = 3;
+            this.transmitBtn.Text = "Transmit";
+            this.transmitBtn.UseVisualStyleBackColor = true;
+            this.transmitBtn.Click += new System.EventHandler(this.transmitBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.transmitBtn);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnStart);
@@ -81,6 +93,7 @@ namespace SpeechToTextV2
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button transmitBtn;
     }
 }
 

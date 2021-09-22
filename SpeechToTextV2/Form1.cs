@@ -19,30 +19,51 @@ namespace SpeechToTextV2
 {
     public partial class Form1 : Form
     {
-
+        private bool isRecording;
         private ClientWebSocket ws;
 
         //private WaveStream source;
 
         private WaveFileWriter RecordedAudioWriter = null;
-        //private WasapiLoopbackCapture CaptureInstance = null;
-        private WaveIn wave = null;
+        private WasapiLoopbackCapture wave = null;
+        //private WaveIn wave = null;
         private MemoryStream memoryStream;
         public Form1()
         {
             InitializeComponent();
-            Task task1 = ConnectToServer();
+            //Task task1 = ConnectToServer();
         }
 
         async private void btnStart_Click(object sender, EventArgs e)
         {
+
+            // Enable "Stop button" and disable "Start Button"
+            this.btnStart.Enabled = false;
+            this.btnStop.Enabled = true;
+            isRecording = true;
+            while (true)
+            {
+                await ConnectToServer();
+                Record();
+                await Task.Delay(250);
+                wave.StopRecording();
+                await DecodeFile();
+                if(!isRecording)
+                {
+                    break;
+                }
+            }
+        }
+
+        private void Record()
+        {
             // Define the output wav file of the recorded audio
-            string outputFilePath = @"C:\Users\gucea\Desktop\system_recorded_audio.wav";
+            //string outputFilePath = @"C:\Users\gucea\Desktop\system_recorded_audio.wav";
 
             // Redefine the capturer instance with a new instance of the LoopbackCapture class
             //this.CaptureInstance = new WasapiLoopbackCapture();
-            wave = new WaveIn();
-            wave.WaveFormat = new WaveFormat(16000, 16, 1);
+            wave = new WasapiLoopbackCapture();
+            //wave.WaveFormat = new WaveFormat(16000, 16, 1);
             memoryStream = new MemoryStream();
             // Redefine the audio writer instance with the given configuration
             this.RecordedAudioWriter = new WaveFileWriter(new IgnoreDisposeStream(memoryStream), wave.WaveFormat);
@@ -61,9 +82,6 @@ namespace SpeechToTextV2
                 wave.Dispose();
             };
 
-            // Enable "Stop button" and disable "Start Button"
-            this.btnStart.Enabled = false;
-            this.btnStop.Enabled = true;
 
             // Start recording !
             this.wave.StartRecording();
@@ -72,8 +90,8 @@ namespace SpeechToTextV2
         private void btnStop_Click(object sender, EventArgs e)
         {
             // Stop recording !
-            this.wave.StopRecording();
-
+            //this.wave.StopRecording();
+            isRecording = false;
             // Enable "Start button" and disable "Stop Button"
             this.btnStart.Enabled = true;
             this.btnStop.Enabled = false;

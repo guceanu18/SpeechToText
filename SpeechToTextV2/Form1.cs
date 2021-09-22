@@ -111,7 +111,6 @@ namespace SpeechToTextV2
             /*string outputFilePath = @"C:\Users\gucea\Desktop\system_recorded_audio.wav";
             FileStream fsSource = new FileStream(outputFilePath,
                        FileMode.Open, FileAccess.Read);*/
-
             byte[] data = new byte[16000];
             while (true)
             {

@@ -21,22 +21,21 @@ namespace SpeechToTextV2
     {
         private bool isRecording;
         private ClientWebSocket ws;
-
+        MemoryStream memoryStream;
         //private WaveStream source;
 
         private WaveFileWriter RecordedAudioWriter = null;
         //private WasapiLoopbackCapture wave = null;
         private WaveIn wave = null;
-        private MemoryStream memoryStream;
         public Form1()
         {
             InitializeComponent();
-            Task task1 = ConnectToServer();
+            //Task task1 = ConnectToServer();
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private async void btnStart_Click(object sender, EventArgs e)
         {
-
+            await ConnectToServer();
             // Enable "Stop button" and disable "Start Button"
             this.btnStart.Enabled = false;
             this.btnStop.Enabled = true;
@@ -49,14 +48,15 @@ namespace SpeechToTextV2
             memoryStream = new MemoryStream();
             // Redefine the audio writer instance with the given configuration
             this.RecordedAudioWriter = new WaveFileWriter(new IgnoreDisposeStream(memoryStream), wave.WaveFormat);
-
+            
             // When the capturer receives audio, start writing the buffer into the mentioned file
             this.wave.DataAvailable += async (s, a) =>
             {
                 this.RecordedAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
-                //Debug.WriteLine("in data available " + a.BytesRecorded.ToString());
-                await ProcessData(ws, a.Buffer, a.BytesRecorded);
-                //await ProcessFinalData(ws);
+                byte[] result = new byte[16000];
+                await ws.SendAsync(new ArraySegment<byte>(a.Buffer, 0, a.BytesRecorded), WebSocketMessageType.Binary, true, CancellationToken.None);
+                var receivedString = Encoding.UTF8.GetString(result, 0, ws.ReceiveAsync(new ArraySegment<byte>(result), CancellationToken.None).Result.Count);
+                Debug.WriteLine("Result {0}", receivedString);
             };
 
             // When the Capturer Stops
@@ -67,12 +67,11 @@ namespace SpeechToTextV2
                 wave.Dispose();
             };
 
-
             // Start recording !
             this.wave.StartRecording();
         }
-        
-        private void btnStop_Click(object sender, EventArgs e)
+
+        private async void btnStop_Click(object sender, EventArgs e)
         {
             // Stop recording !
             this.wave.StopRecording();
@@ -80,7 +79,7 @@ namespace SpeechToTextV2
             // Enable "Start button" and disable "Stop Button"
             this.btnStart.Enabled = true;
             this.btnStop.Enabled = false;
-
+            await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "OK", CancellationToken.None);
         }
 
         public async Task ConnectToServer()
@@ -91,49 +90,5 @@ namespace SpeechToTextV2
             byte[] api = Encoding.UTF8.GetBytes("{\"config\": {\"key\": \"" + key + "\"}}");
             await ws.SendAsync(new ArraySegment<byte>(api, 0, api.Length), WebSocketMessageType.Text, true, CancellationToken.None);
         }
-
-        async Task DecodeFile()
-        {
-            byte[] data = new byte[16000];
-            
-            while (true)
-            {
-                int count = memoryStream.Read(data, 0, 16000);
-                if (count == 0)
-                    break;
-                await ProcessData(ws, data, count);
-            }
-            await ProcessFinalData(ws);
-
-            await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "OK", CancellationToken.None);
-        }
-
-        async Task RecieveResult(ClientWebSocket ws)
-        {
-            byte[] result = new byte[16000];
-            Task<WebSocketReceiveResult> receiveTask = ws.ReceiveAsync(new ArraySegment<byte>(result), CancellationToken.None);
-            await receiveTask;
-            var receivedString = Encoding.UTF8.GetString(result, 0, receiveTask.Result.Count);
-            Debug.WriteLine("Result {0}", receivedString);
-        }
-
-        async Task ProcessData(ClientWebSocket ws, byte[] data, int count)
-        {
-            await ws.SendAsync(new ArraySegment<byte>(data, 0, count), WebSocketMessageType.Binary, true, CancellationToken.None);
-            await RecieveResult(ws);
-        }
-
-        async Task ProcessFinalData(ClientWebSocket ws)
-        {
-            byte[] eof = Encoding.UTF8.GetBytes("{\"eof\" : 1}");
-            await ws.SendAsync(new ArraySegment<byte>(eof), WebSocketMessageType.Text, true, CancellationToken.None);
-            await RecieveResult(ws);
-        }
-
-        async private void transmitBtn_Click(object sender, EventArgs e)
-        {
-            await DecodeFile();
-        }
     }
-
 }

@@ -21,6 +21,7 @@ namespace SpeechToTextV2
     {
         private bool isRecording;
         private ClientWebSocket ws;
+        private string finalResult;
         MemoryStream memoryStream;
         //private WaveStream source;
 
@@ -48,7 +49,7 @@ namespace SpeechToTextV2
             memoryStream = new MemoryStream();
             // Redefine the audio writer instance with the given configuration
             this.RecordedAudioWriter = new WaveFileWriter(new IgnoreDisposeStream(memoryStream), wave.WaveFormat);
-            
+
             // When the capturer receives audio, start writing the buffer into the mentioned file
             this.wave.DataAvailable += async (s, a) =>
             {
@@ -57,6 +58,11 @@ namespace SpeechToTextV2
                 await ws.SendAsync(new ArraySegment<byte>(a.Buffer, 0, a.BytesRecorded), WebSocketMessageType.Binary, true, CancellationToken.None);
                 var receivedString = Encoding.UTF8.GetString(result, 0, ws.ReceiveAsync(new ArraySegment<byte>(result), CancellationToken.None).Result.Count);
                 Debug.WriteLine("Result {0}", receivedString);
+                if (receivedString.Contains("partial"))
+                {
+                    jsonHandler(receivedString);
+                }
+
             };
 
             // When the Capturer Stops
@@ -70,6 +76,16 @@ namespace SpeechToTextV2
             // Start recording !
             this.wave.StartRecording();
         }
+
+        void jsonHandler(string receivedString)
+        {
+            JObject obj = JObject.Parse(receivedString);
+            var item = obj["partial"].ToString();
+            System.Diagnostics.Debug.WriteLine(item);
+            finalResult += item + "\n";
+            textBox.AppendText(finalResult);
+        }
+
 
         private async void btnStop_Click(object sender, EventArgs e)
         {
@@ -90,5 +106,7 @@ namespace SpeechToTextV2
             byte[] api = Encoding.UTF8.GetBytes("{\"config\": {\"key\": \"" + key + "\"}}");
             await ws.SendAsync(new ArraySegment<byte>(api, 0, api.Length), WebSocketMessageType.Text, true, CancellationToken.None);
         }
+
+        
     }
 }

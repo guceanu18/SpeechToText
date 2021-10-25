@@ -31,7 +31,7 @@ namespace SpeechToTextV2
         {
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // btnStart
@@ -46,7 +46,7 @@ namespace SpeechToTextV2
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(533, 271);
+            this.btnStop.Location = new System.Drawing.Point(372, 267);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 1;
@@ -54,25 +54,25 @@ namespace SpeechToTextV2
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
-            // textBox1
+            // textBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(305, 125);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 23);
-            this.textBox1.TabIndex = 2;
+            this.textBox.Location = new System.Drawing.Point(229, 98);
+            this.textBox.Name = "textBox";
+            this.textBox.Size = new System.Drawing.Size(218, 135);
+            this.textBox.TabIndex = 2;
+            this.textBox.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(680, 443);
+            this.Controls.Add(this.textBox);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnStart);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -80,7 +80,8 @@ namespace SpeechToTextV2
 
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnStop;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button transmitBtn;
+        private System.Windows.Forms.RichTextBox textBox;
     }
 }
 

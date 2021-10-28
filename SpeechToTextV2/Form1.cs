@@ -19,9 +19,8 @@ namespace SpeechToTextV2
 {
     public partial class Form1 : Form
     {
-        private bool isRecording;
         private ClientWebSocket ws;
-        private string finalResult;
+        string finalResult;
         MemoryStream memoryStream;
         //private WaveStream source;
 
@@ -40,7 +39,6 @@ namespace SpeechToTextV2
             // Enable "Stop button" and disable "Start Button"
             this.btnStart.Enabled = false;
             this.btnStop.Enabled = true;
-            isRecording = true;
 
             // Redefine the capturer instance with a new instance of the LoopbackCapture class
             //this.CaptureInstance = new WasapiLoopbackCapture();
@@ -78,20 +76,15 @@ namespace SpeechToTextV2
         {
             JObject obj = JObject.Parse(receivedString);
             if (receivedString.Contains("partial"))
-            {
+            {   
                 var item = obj["partial"].ToString();
-                System.Diagnostics.Debug.WriteLine(item);
-                finalResult = item + " ";
-                textBox.Text = finalResult;
+                if (item != "")
+                {
+                    finalResult = item + " ";
+                    textBox.Text = finalResult;
+                    
+                }
             }
-            if (receivedString.Contains("text"))
-            {
-                var item = obj["text"].ToString();
-                System.Diagnostics.Debug.WriteLine(item);
-                finalResult += item + " ";
-                textBox.Text += finalResult;
-            }
-
         }
 
 
@@ -99,7 +92,6 @@ namespace SpeechToTextV2
         {
             // Stop recording !
             this.wave.StopRecording();
-            isRecording = false;
             // Enable "Start button" and disable "Stop Button"
             this.btnStart.Enabled = true;
             this.btnStop.Enabled = false;

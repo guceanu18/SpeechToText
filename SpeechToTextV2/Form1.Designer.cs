@@ -40,7 +40,7 @@ namespace SpeechToTextV2
             this.btnStart.BackColor = System.Drawing.Color.Lime;
             this.btnStart.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnStart.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnStart.Location = new System.Drawing.Point(25, 273);
+            this.btnStart.Location = new System.Drawing.Point(25, 168);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(92, 54);
             this.btnStart.TabIndex = 0;
@@ -52,7 +52,7 @@ namespace SpeechToTextV2
             // 
             this.btnStop.BackColor = System.Drawing.Color.Red;
             this.btnStop.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnStop.Location = new System.Drawing.Point(319, 273);
+            this.btnStop.Location = new System.Drawing.Point(319, 168);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(94, 54);
             this.btnStop.TabIndex = 1;
@@ -67,7 +67,7 @@ namespace SpeechToTextV2
             this.textBox.ForeColor = System.Drawing.SystemColors.MenuBar;
             this.textBox.Location = new System.Drawing.Point(25, 58);
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(388, 189);
+            this.textBox.Size = new System.Drawing.Size(388, 95);
             this.textBox.TabIndex = 2;
             this.textBox.Text = "";
             // 
@@ -77,7 +77,7 @@ namespace SpeechToTextV2
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(433, 372);
+            this.ClientSize = new System.Drawing.Size(442, 274);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnStart);

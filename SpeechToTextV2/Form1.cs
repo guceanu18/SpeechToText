@@ -81,14 +81,14 @@ namespace SpeechToTextV2
             {
                 var item = obj["partial"].ToString();
                 System.Diagnostics.Debug.WriteLine(item);
-                finalResult = item + "\n";
+                finalResult = item + " ";
                 textBox.Text = finalResult;
             }
             if (receivedString.Contains("text"))
             {
                 var item = obj["text"].ToString();
                 System.Diagnostics.Debug.WriteLine(item);
-                finalResult += item + "\n";
+                finalResult += item + " ";
                 textBox.Text += finalResult;
             }
 

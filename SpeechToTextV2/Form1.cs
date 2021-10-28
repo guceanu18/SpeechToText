@@ -22,7 +22,6 @@ namespace SpeechToTextV2
         private ClientWebSocket ws;
         string finalResult;
         MemoryStream memoryStream;
-        //private WaveStream source;
 
         private WaveFileWriter RecordedAudioWriter = null;
         //private WasapiLoopbackCapture wave = null;

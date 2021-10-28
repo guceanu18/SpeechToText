@@ -58,10 +58,7 @@ namespace SpeechToTextV2
                 await ws.SendAsync(new ArraySegment<byte>(a.Buffer, 0, a.BytesRecorded), WebSocketMessageType.Binary, true, CancellationToken.None);
                 var receivedString = Encoding.UTF8.GetString(result, 0, ws.ReceiveAsync(new ArraySegment<byte>(result), CancellationToken.None).Result.Count);
                 Debug.WriteLine("Result {0}", receivedString);
-                if (receivedString.Contains("partial"))
-                {
-                    jsonHandler(receivedString);
-                }
+                jsonHandler(receivedString);
 
             };
 
@@ -80,10 +77,21 @@ namespace SpeechToTextV2
         void jsonHandler(string receivedString)
         {
             JObject obj = JObject.Parse(receivedString);
-            var item = obj["partial"].ToString();
-            System.Diagnostics.Debug.WriteLine(item);
-            finalResult += item + "\n";
-            textBox.AppendText(finalResult);
+            if (receivedString.Contains("partial"))
+            {
+                var item = obj["partial"].ToString();
+                System.Diagnostics.Debug.WriteLine(item);
+                finalResult = item + "\n";
+                textBox.Text = finalResult;
+            }
+            if (receivedString.Contains("text"))
+            {
+                var item = obj["text"].ToString();
+                System.Diagnostics.Debug.WriteLine(item);
+                finalResult += item + "\n";
+                textBox.Text += finalResult;
+            }
+
         }
 
 
